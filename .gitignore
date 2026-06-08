@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Jupyter Notebook
+ipynb_checkpoints/
+export_rdata.ipynb
+
+# data
+*.parquet
+*.RData
