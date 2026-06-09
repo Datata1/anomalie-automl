@@ -1,5 +1,42 @@
 # AutoML-Strategie 4: Ensembling
 
+> **Intuition zuerst** — dieser Block erklärt die Strategie in Alltagssprache. Die formale
+> Behandlung folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Statt auf *einen* Detektor zu wetten, **frag ein Gremium und mittle** — und umgehe damit ganz
+nebenbei das Problem, label-frei den besten auswählen zu müssen.
+
+### Das Bild im Kopf
+
+**Weisheit der Vielen:** Lässt man viele Wetterfrösche unabhängig schätzen und mittelt ihre
+Prognosen, ist das Ergebnis oft besser als der einzelne beste Frosch — weil sich individuelle
+Fehler herausmitteln, *solange die Frösche verschieden sind*. In der AD ist das doppelt
+attraktiv: Du musst nicht erst (ohne Lösungsschlüssel!) den Gewinner küren — du **kombinierst
+einfach alle**. Wichtig: Die Detektoren liefern Scores auf verschiedenen Skalen → vor dem Mitteln
+**normalisieren** (sonst überstimmt ein „lauter" Detektor die anderen).
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| **keine Labels** zur Auswahl da sind (pragmatischster Hebel) | die Mitglieder stark **korreliert** sind (kein Mehrwert) |
+| die Einzeldetektoren ohnehin schon existieren | Rechenbudget knapp ist (Kosten = Summe der Mitglieder) |
+| Robustheit über einzelne Schwächen gewünscht ist | `max`-Aggregation → neigt zu **Fehlalarmen** |
+
+### So liest und erklärst du das Ergebnis
+
+- **Die Kernaussage:** Ein robustes Mittel **schlägt oft den besten *label-freien* Einzeldetektor**
+  — auf TEP lag der Konsens (~**0.854**) praktisch auf **Oracle-Niveau** (~0.855). Das macht
+  Ensembling zur stärksten *praktischen* Antwort auf das Selektionsproblem.
+- **Faustregel zum Erklären:** „Wir mussten den besten Detektor gar nicht finden — der Konsens
+  vieler war so gut wie die beste Einzelwahl mit Labels."
+- **Diversität ist die Bedingung:** Fünf fast identische Mitglieder bringen nichts; der Gewinn
+  kommt aus *unterschiedlichen* Detektor-Typen/HP/Feature-Subsets.
+- **`average`/`median` vs. `max`:** Mittel/Median sind der robuste Default; `max` ist sensibler
+  („ein Detektor reicht"), erzeugt aber mehr Fehlalarme — beim Berichten dazusagen.
+
 ## 1. Idee & Problembezug
 
 Beim AutoML werden viele Modelle trainiert; einige sind fast so gut wie das Beste. Statt sie

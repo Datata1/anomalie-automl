@@ -1,5 +1,47 @@
 # AutoML-Strategie 1: HPO-Engines & Bayesian Optimization
 
+> **Intuition zuerst** — dieser Block erklärt die Strategie in Alltagssprache. Die formale
+> Behandlung folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Statt die **Stellschrauben** eines Modells von Hand zu drehen, übernimmt ein Optimierer die
+*intelligente* Suche — und lernt aus jedem Versuch, wo es sich lohnt weiterzusuchen.
+
+### Das Bild im Kopf
+
+Du justierst eine **Maschine mit vielen Reglern, in die du nicht hineinsehen kannst**, und jeder
+Testlauf ist teuer.
+
+- **Grid/Random Search:** Reglerstellungen blind durchprobieren — erstaunlich brauchbar als
+  Baseline, aber verschwenderisch.
+- **Bayesian Optimization:** Du baust dir ein **mentales Modell** „in dieser Reglerregion lief es
+  zuletzt gut — probier nebenan weiter" und steckst die nächsten Tests gezielt dorthin. Das
+  *Surrogat* ist dieses Gedächtnis, die *Acquisition Function* die Entscheidung „wo als Nächstes".
+- **Multi-Fidelity (Hyperband/BOHB):** wie ein **Casting in Runden** — alle Kandidaten bekommen
+  zuerst eine *kurze* Probe (wenig Daten/Epochen), nur die Vielversprechenden kommen in die
+  Vollprobe. So verschwendest du teure Rechenzeit nicht an offensichtliche Nieten.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| das Modell **sensibel** auf HP reagiert (OC-SVM, AE) | im **unüberwachten** Fall — es fehlt die Zielmetrik! (siehe unten) |
+| jeder Trainingslauf teuer ist (→ Multi-Fidelity) | Defaults ohnehin schon stark sind (Gewinn klein) |
+| du den Gewinn vs. Defaults *messbar* zeigen willst | der Suchraum trivial klein ist |
+
+### So liest und erklärst du das Ergebnis
+
+- **Die Schlüsselfolie ist „Default vs. Random vs. BO vs. BOHB":** Wie viel ROC-AUC kaufte die
+  *kluge* Suche gegenüber den Defaults?
+- **Ehrliches TEP-Ergebnis:** Die HPO-Gewinne waren **moderat**, weil die Defaults der Detektoren
+  schon stark sind. Das ist *kein Misserfolg*, sondern ein häufiger und berichtenswerter Befund —
+  „starke Defaults" ist selbst eine Erkenntnis.
+- **Der entscheidende Haken in der AD:** Im **unüberwachten** Fall gibt es **kein direktes
+  Gütesignal**, an dem der Optimierer „besser/schlechter" festmachen könnte. Dann braucht man eine
+  interne Metrik, das Oracle (nur als Obergrenze!) — oder man verzichtet auf HPO und setzt auf
+  robuste Defaults/Ensembles. **Diese Einschränkung in der Präsentation klar benennen.**
+
 ## 1. Idee & Problembezug
 
 Löst **Hyperparameter-Optimierung (HPO)** und optional **CASH** (Modell + HP gemeinsam):

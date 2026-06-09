@@ -1,5 +1,46 @@
 # Statistische Baseline: Z-Score & PCA-Reconstruction
 
+> **Intuition zuerst** — dieser Block erklärt die Methode in Alltagssprache und hilft dir,
+> sie anderen zu erklären und Ergebnisse einzuordnen. Die formale Referenz folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Beschreibe „normal" mit der **einfachsten sinnvollen Statistik** und markiere, was zu weit
+herausfällt — der ehrliche Vergleichsmaßstab für alles Komplexere.
+
+### Das Bild im Kopf
+
+- **Z-Score (univariat):** „Dieser Wert ist *drei Standardabweichungen* vom Mittel entfernt"
+  — wie ein **2,10-m-Mensch in einem Raum voller Durchschnittsgrößen**. Pro Sensor gemessen,
+  ohne Rücksicht auf die anderen.
+- **PCA-Reconstruction (multivariat):** Die Gutdaten leben in Wahrheit auf einer **dünnen,
+  schräg im Raum liegenden Fläche** — denn die Sensoren bewegen sich gemeinsam (steigt der
+  Reaktordruck, steigt auch die Temperatur). PCA lernt diese Fläche. Man **projiziert einen
+  Punkt auf die Fläche und wieder zurück**; landet er weit von sich selbst, lag er *neben* der
+  Normalfläche → anomal. Wie der Test „liegt dieser Punkt auf der bekannten Ebene?".
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| du **immer zuerst** einen ehrlichen Anker willst | Fehler **nichtlinear** sind (PCA sieht nur lineare Korrelation) |
+| Geschwindigkeit & **Interpretierbarkeit** zählen | Fehler rein **zeitlich/driftend** sind |
+| du erklären willst, *welche* Komponente abweicht | du den letzten Prozentpunkt AUC brauchst |
+
+### So liest und erklärst du das Ergebnis
+
+- **Der Score** ist der aggregierte |z| bzw. der Rekonstruktionsfehler — *höher = anomaler*.
+- **Das ist dein Boden, nicht dein Ziel:** Die Baseline-Zahl ist der Maßstab, an dem sich alle
+  komplexen Methoden messen lassen müssen. **Schlägt ein Autoencoder die PCA nur knapp, zahlt
+  sich der Mehraufwand nicht aus** — eine der wichtigsten Aussagen, die du aus dem Vergleich
+  ziehen kannst.
+- **Faustregel zum Erklären:** „So weit kommt man mit Statistik in einer Zeile."
+- **TEP-Einordnung:** PCA fängt die starke multivariate Sensor-Korrelation gut, *verpasst* aber
+  die subtilen Fehler 3 / 9 / 15. Genau dieser **„Miss" motiviert** die teureren Methoden.
+  Tipp: **ECOD** (parameterfrei) ist ein noch bequemerer Default-Anker.
+
+---
+
 ## 1. Titel & Einordnung
 
 - **Setting:** unsupervised

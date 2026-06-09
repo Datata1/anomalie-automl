@@ -3,6 +3,43 @@
 > Ein einheitliches Protokoll für alle Methoden, damit Ergebnisse vergleichbar sind. Legt
 > Split, Labeling, Metriken, Threshold-Wahl und Alarmmanagement fest.
 
+> **Intuition zuerst** — dieser Block erklärt, *wie man die Ergebnisse liest*, in Alltagssprache.
+> Das formale Protokoll folgt ab Abschnitt 1.
+
+### Worum es geht
+
+Ein Detektor liefert pro Zeitpunkt einen **Anomalie-Score** (höher = verdächtiger). Erst ein
+**Threshold** macht daraus die Entscheidung „Alarm / kein Alarm". Damit Methoden *fair*
+vergleichbar sind, brauchen alle dasselbe Split-, Label- und Metrik-Protokoll — sonst vergleicht
+man Äpfel mit Birnen.
+
+### Die Metriken — was sie *wirklich* sagen
+
+- **ROC-AUC** = „Wie gut **trennt** der Score generell Normal von Anomal?" (rangbasiert,
+  threshold-frei). *Vorsicht:* Bei seltenen Anomalien wirkt ROC-AUC **zu optimistisch** — etwa
+  wie ein Rauchmelder, den man dafür lobt, dass er die meiste Zeit korrekt *schweigt*.
+- **PR-AUC** = ehrlicher, wenn Anomalien selten sind: Wie viele der Alarme stimmen, und wie viele
+  echte Fehler fängt man? **ROC-AUC und PR-AUC immer zusammen lesen.**
+- **Precision / Recall / F1** = die Betriebssicht *nach* der Threshold-Wahl: Wie viele Fehlalarme
+  vs. verpasste Fehler?
+- **Detection Delay** = „**Wie schnell schrillt der Alarm, nachdem der Brand ausgebrochen ist?**"
+  (Samples vom Onset bis zum ersten stabilen Alarm). Für die Praxis oft *die* entscheidende Zahl.
+- **False Alarm Rate** = wie oft schlägt es bei reinem Normalbetrieb grundlos an?
+
+### So liest und erklärst du eine Ergebnistabelle
+
+- **Für den AutoML-Vergleich** ist **ROC-AUC/PR-AUC** die primäre Zielgröße (threshold-frei,
+  fair). **Für die PowerPoint/Betriebsdarstellung** sind **F1 + Detection Delay + False-Alarm-Rate**
+  anschaulicher — ein Manager versteht „Alarm nach 9 Minuten, 1 Fehlalarm pro Tag" sofort, einen
+  AUC-Wert nicht.
+- **Eine einzelne Zahl genügt nie:** Ein hoher ROC-AUC mit miserablem Detection Delay ist in der
+  Praxis wertlos. Immer das *Trio* berichten.
+- **Modellauswahl mit Labels ist „Schummeln"** und nur als ausgewiesenes **Oracle** (Obergrenze)
+  erlaubt — nie als reguläres Ergebnis verkaufen.
+- **Vom Score zum Alarm:** Einzelne Ausreißer sind meist Modellrauschen; erst eine *anhaltend*
+  hohe Alarmrate (gleitendes Mittel über ein Fenster) zeigt einen echten Anlagenfehler (siehe
+  Abschnitt 5).
+
 ## 1. Train/Test-Split (kein Leakage)
 
 - **Split nach `simulationRun`**, nicht zeilenweise. Train- und Test-Läufe sind disjunkt.

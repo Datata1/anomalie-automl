@@ -1,5 +1,44 @@
 # Self-Organizing Map (SOM) — optional
 
+> **Intuition zuerst** — dieser Block erklärt die Methode in Alltagssprache und hilft dir,
+> sie anderen zu erklären und Ergebnisse einzuordnen. Die formale Referenz folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Lege ein **flexibles 2D-Gitter** in die Datenwolke der Gutdaten; wer weit von jedem Gitterknoten
+liegt, ist anomal — und du bekommst **gratis eine Landkarte** des Prozesszustands.
+
+### Das Bild im Kopf
+
+Stell dir vor, du **wirfst ein Fischernetz über die Landschaft aller normalen
+Betriebszustände**. Jeder Knoten sinkt in eine gut besuchte Region und merkt sich, wie es dort
+„aussieht". Ein neuer Messpunkt nah an einem Knoten = vertrautes Terrain; weit von *allen*
+Knoten = unbekanntes Gebiet → anomal. Der Clou: Weil das Netz **zweidimensional** ist und
+benachbarte Knoten ähnliche Zustände abbilden, kannst du es **einfärben und buchstäblich sehen**,
+wo sich die Anlage gerade befindet. (Wichtiges Detail: Knoten, die im Training fast nie getroffen
+wurden, werden entfernt — sonst „verstecken" sich Anomalien an leeren Knoten.)
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| du eine **anschauliche 2D-Karte** zum Erklären willst (PowerPoint!) | du maximale Detection-Leistung brauchst (→ AE, DeepSAD) |
+| didaktischer Mehrwert wichtiger ist als Spitzenleistung | wenig Zeit ist (viele HP, mehr Tooling-Aufwand) |
+| multivariate Struktur sichtbar gemacht werden soll | Fehler rein zeitlich sind (punktweise Methode) |
+
+### So liest und erklärst du das Ergebnis
+
+- **Der Score** ist die mittlere Distanz zu den nächsten Gitterknoten — *höher = anomaler*.
+- **Das eigentliche Verkaufsargument ist die Karte**, nicht die Zahl: Du kannst zeigen, wie der
+  Betriebspunkt im Normalfall in einer Region „wohnt" und bei einem Fehler in unbesiedeltes
+  Gebiet wandert. Für ein Publikum ist das oft überzeugender als ein AUC-Wert.
+- **Faustregel zum Erklären:** „Die Anlage ist in einen Zustand gewandert, den sie im Normalbetrieb
+  nie eingenommen hat."
+- **Einordnung:** bewusst als *optionales Anschauungsmodell* gedacht — nimm es rein, wenn
+  Zeit-/Folienbudget es erlauben, nicht als Leistungsträger.
+
+---
+
 ## 1. Titel & Einordnung
 
 - **Setting:** unsupervised

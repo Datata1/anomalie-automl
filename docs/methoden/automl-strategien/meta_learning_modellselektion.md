@@ -1,5 +1,42 @@
 # AutoML-Strategie 3: Meta-Learning-Modellselektion (MetaOD)
 
+> **Intuition zuerst** — dieser Block erklärt die Strategie in Alltagssprache. Die formale
+> Behandlung folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Empfiehl für einen **neuen, ungelabelten** Datensatz einen guten Detektor — nicht aus dessen
+Labels, sondern aus **Erfahrung darüber, was auf ähnlichen Datensätzen gut war**.
+
+### Das Bild im Kopf
+
+Ein **Sommelier, der schon tausende Weine zu tausenden Gerichten probiert hat**. Du nennst ihm
+ein neues Gericht, *er kostet es gar nicht* — er liest ein paar Merkmale ab („kräftig, fettig,
+würzig") und empfiehlt aus seinem Erfahrungsschatz den passenden Wein. **MetaOD** ist dieser
+Sommelier: Es hat viele Detektoren auf vielen Datensätzen gesehen, berechnet für deinen neuen
+Datensatz einen **„Fingerabdruck" (Meta-Features)** und empfiehlt die Detektoren, die auf
+ähnlich-fingerabdrückenden Datensätzen funktionierten — **ganz ohne Labels deines Datensatzes**.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| du **prinzipiell label-frei** selektieren willst | dein Datensatz **untypisch** ist (außerhalb der Trainingsverteilung) |
+| eine **sofortige** Empfehlung ohne Suchlauf gewünscht ist | **Zeitdynamik** entscheidend ist (Meta-Features ignorieren sie) |
+| der State-of-the-Art-Kontrast zum Oracle gezeigt werden soll | das Tooling/Paket veraltet/inkompatibel ist |
+
+### So liest und erklärst du das Ergebnis
+
+- **Lies es als Dreikampf:** MetaOD-Empfehlung vs. **Oracle** (beste Wahl mit Labels) vs.
+  **Default/Zufall**. Der **Gap zum Oracle** ist die Aussage.
+- **Faustregel zum Erklären:** „Aus Erfahrung auf anderen Datensätzen können wir auch ohne Labels
+  einen vernünftigen Detektor vorschlagen — die Frage ist nur, wie nah am Optimum."
+- **Wichtige Einschränkung:** Die Qualität steht und fällt damit, **wie gut TEP durch die
+  Benchmark-Datensätze repräsentiert** ist. TEP ist hochdimensional *und* zeitlich — gut möglich,
+  dass es außerhalb dessen liegt, was MetaOD je gesehen hat. Im Projekt war MetaOD unter Python
+  3.13 nicht lauffähig → **Konsens-Ensemble als Fallback** (siehe Kernproblem-Doku). Das offen
+  benennen.
+
 ## 1. Idee & Problembezug
 
 Direkte Antwort auf das **Kernproblem** (

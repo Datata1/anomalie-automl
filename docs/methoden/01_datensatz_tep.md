@@ -4,6 +4,39 @@
 > evaluieren — inkl. Beschaffung, Spaltenlogik und der für AD entscheidenden
 > Fehler-Onset-Logik.
 
+> **Intuition zuerst** — dieser Block fasst das Wichtigste in Alltagssprache zusammen. Die
+> vollständigen Details folgen ab Abschnitt 1.
+
+### Das Wichtigste in 60 Sekunden
+
+Der **Tennessee Eastman Process (TEP)** ist eine **realitätsnah simulierte Chemieanlage**
+(Reaktor, Kondensator, Separator, Stripper, Kompressor) mit **52 Sensoren/Stellgrößen**, die
+alle 3 Minuten messen. Es gibt **Normalbetrieb** und **20 definierte Fehlertypen (IDV 1–20)** —
+manche springen schlagartig (Step), manche schwanken zufällig, manche **driften langsam** (z. B.
+IDV 13) oder zeigen klemmende Ventile. Weil es eine *Simulation* ist, gibt es keine fehlenden
+Werte und eine saubere Balance — ideal zum Methoden-*Vergleichen*.
+
+### Das Bild im Kopf — die Onset-Falle (der teuerste Anfängerfehler)
+
+Stell dir eine **Patientenakte mit dem Etikett „Grippe-Patient"** vor. Trotzdem war der Patient
+am Morgen *vor* Symptombeginn **gesund** — du darfst die Morgenmessungen nicht als „krank"
+labeln. Genau so ist es hier: In den Test-Läufen mit Fehler sind die **ersten 160 Messungen noch
+normal**, der Fehler wird **erst ab Sample 161** zugeschaltet.
+
+> **`faultNumber != 0` heißt also NICHT, dass jede Zeile dieses Laufs anomal ist!** Das korrekte
+> punktweise Label ist `(faultNumber != 0) & (sample > 160)`. Wer das ignoriert, *bestraft das
+> Modell für korrektes Verhalten in der gesunden Anlaufphase* und verfälscht alle Zahlen.
+
+### Worauf es beim Modellieren ankommt (und wie man es erklärt)
+
+- **Skalierung ist Pflicht** — die Sensoren haben völlig verschiedene Einheiten (kPa, °C, kg/h,
+  Mol-%). Scaler **nur auf Gutdaten** fitten (sonst Leakage).
+- **Immer auf Lauf-Ebene (`simulationRun`) splitten/subsamplen**, nie zeilenweise — sonst zerreißt
+  man die Zeitstruktur und schmuggelt Information von Train nach Test.
+- **Manche Fehler sind leicht (IDV 1, 2, 6, 7), manche notorisch schwer (3, 9, 15).** Genau diese
+  Spreizung macht den Datensatz zum guten *Schaukasten* für Methodenunterschiede: An den schweren
+  Fehlern trennt sich die Spreu vom Weizen.
+
 ## 1. Herkunft & Charakter
 
 - **Prozess:** Tennessee Eastman Process — ein realitätsnah simulierter chemischer Prozess

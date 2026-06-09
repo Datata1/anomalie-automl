@@ -4,6 +4,39 @@
 > die drei Lern-Settings und die vier AutoML-Strategien und verweist auf die
 > Detaildokumente.
 
+> **Intuition zuerst** — dieser Block erklärt in Alltagssprache, *worum es im ganzen Projekt
+> geht*. Die fachliche Einordnung folgt ab Abschnitt 1.
+
+### Die drei Begriffe in je einem Satz
+
+- **Anomaliedetection (AD):** Ein Modell lernt, **wie „normal" aussieht**, und schlägt Alarm,
+  sobald etwas davon abweicht — *ohne* vorher jeden möglichen Fehler kennen zu müssen.
+- **AutoML:** Automatisiert die **langweiligen Experten-Entscheidungen** — *welches* Modell,
+  *welche* Vorverarbeitung, *welche* Stellschrauben — die sonst ein Mensch mühsam von Hand trifft.
+- **AutoML *für* AD:** Diese Automatisierung auf Anomaliedetection anwenden — und genau hier liegt
+  der Knackpunkt, der dieses Projekt interessant macht.
+
+### Das Bild im Kopf — und warum es hier hakt
+
+Normales AutoML ist wie ein **Schüler, der mit Musterlösung übt**: Er probiert viele
+Lösungswege und behält den, der die meisten Punkte gegen den **Lösungsschlüssel (die Labels)**
+holt. So findet AutoML automatisch das beste Modell.
+
+In der **unüberwachten Anomaliedetection gibt es zur Auswahlzeit aber keinen
+Lösungsschlüssel** — echte Fehler sind selten und teuer, Modelle lernen nur den Normalbetrieb.
+Damit fehlt AutoML das Kriterium, an dem es „besser" von „schlechter" unterscheidet. **Das ist
+der rote Faden des Projekts:** Wie wählt man ein gutes AD-Modell aus, *ohne* nachschauen zu
+können, ob es richtig liegt?
+
+Der **Tennessee-Eastman-Datensatz** hat ausnahmsweise doch Labels. Wir nutzen sie **nicht zum
+Auswählen**, sondern nur als **Oracle** — als heimliche Musterlösung, um zu *messen*, wie nah
+eine label-freie Auswahl ans Optimum kommt.
+
+> **Wenn du nur eine Sache mitnimmst:** „AutoML für AD ist schwer, weil im unüberwachten Fall der
+> Lösungsschlüssel fehlt, an dem AutoML sonst Modelle benotet. Das Projekt misst, wie gut Auswahl
+> *trotzdem* gelingt." Auf TEP war die label-freie Konsens-Auswahl (~0.854) fast so gut wie das
+> Oracle (~0.855) — die ermutigende Kernbotschaft.
+
 ## 1. Fachlicher Rahmen: Prozessüberwachung → Anomaliedetection → AutoML
 
 **Prozessüberwachung** beobachtet einen Produktionsprozess kontinuierlich anhand von

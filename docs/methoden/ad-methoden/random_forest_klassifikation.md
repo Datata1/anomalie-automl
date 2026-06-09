@@ -1,5 +1,49 @@
 # Random-Forest-Fehlerklassifikation (supervised Baseline)
 
+> **Intuition zuerst** — dieser Block erklärt die Methode in Alltagssprache und hilft dir,
+> sie anderen zu erklären und Ergebnisse einzuordnen. Die formale Referenz folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Wenn du **viele gelabelte Fehler** hast, frag nicht „anomal ja/nein", sondern lass **viele
+Entscheidungsbäume abstimmen**, *welcher* der 20 Fehler vorliegt.
+
+### Das Bild im Kopf
+
+Ein **Ärzte-Komitee**: Jeder Arzt sieht nur einen zufälligen Ausschnitt der Patienten und
+Symptome und stellt seine Diagnose. Allein würde jeder zu sehr auf Eigenheiten seiner Fälle
+überanpassen — aber die **Mehrheitsabstimmung** des ganzen Komitees ist erstaunlich robust. Das
+ist der Random Forest: viele Bäume auf zufälligen Daten-/Feature-Ausschnitten, deren Votum
+gemittelt wird.
+
+Der entscheidende Unterschied zur Anomaliedetection: Hier hat man **dem Komitee vorher alle 20
+Krankheitsbilder mit Etikett gezeigt**. Das macht es stark — aber auch **blind für eine Krankheit,
+die es nie gesehen hat**.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| **viele Labels aller Fehlertypen** vorliegen | im Realbetrieb selten alle Fehler gelabelt sind |
+| du **Diagnose** willst (welcher Fehler), nicht nur Alarm | **neue/ungesehene** Fehlertypen auftreten können |
+| eine starke, robuste Obergrenze als Vergleich nötig ist | du echtes label-freies AutoML demonstrieren willst |
+
+### So liest und erklärst du das Ergebnis
+
+- **Score für den AD-Vergleich:** `predict_proba` der Fehlerklasse(n) — so sind ROC-/PR-AUC
+  direkt mit den AD-Methoden vergleichbar.
+- **Das ist die Obergrenze „mit Labels":** Auf TEP lag die Klassifikation (FLAML ~**0.84**)
+  über der besten unüberwachten AD (~**0.80**). *Aber:* der RF kann einen **nie gesehenen
+  Fehlertyp nicht erkennen** — und genau deshalb bleibt AD praxisrelevant. Das ist die
+  **Kernaussage des Klassifikation-vs.-AD-Vergleichs** und eine starke Folie.
+- **Faustregel zum Erklären:** „Mit vollständigen Labels gewinnt Klassifikation — aber sie
+  versagt bei allem, was nicht im Trainingskatalog stand. AD kennt diesen Katalog nicht und
+  fängt auch Unbekanntes."
+- **Bonus:** Feature Importances zeigen, *welche* Sensoren einen Fehler verraten —
+  gut interpretierbar.
+
+---
+
 ## 1. Titel & Einordnung
 
 - **Setting:** supervised (Mehrklassen-Fehlerklassifikation)

@@ -1,5 +1,45 @@
 # Isolation Forest
 
+> **Intuition zuerst** — dieser Block erklärt die Methode in Alltagssprache und hilft dir,
+> sie anderen zu erklären und Ergebnisse einzuordnen. Die formale Referenz folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Anomalien sind **selten und anders** — also lassen sie sich mit wenigen zufälligen Schnitten
+schneller „einzäunen" als normale Punkte.
+
+### Das Bild im Kopf
+
+Denk an **„Wer bin ich?" mit Ja/Nein-Fragen**. Um die Person im Hühnerkostüm zu isolieren,
+brauchst du *eine* Frage („Trägt sie ein Kostüm?"). Um eine durchschnittliche Person im grauen
+Anzug eindeutig zu bestimmen, brauchst du viele Fragen. Der Isolation Forest pflanzt einen
+ganzen **Wald aus Zufallsbäumen**, die die Daten mit zufälligen Schnitten zerteilen, bis jeder
+Punkt allein steht. Die **Anzahl der Schnitte bis zur Isolation** (die Pfadlänge) ist das
+Signal: *wenige Schnitte → Anomalie*. Kein Verteilungswissen, keine Distanzberechnung — nur die
+simple Beobachtung, dass Ausreißer am Rand schneller abgetrennt sind.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| du eine **schnelle, robuste erste Wahl** willst | der Fehler rein **zeitlich/driftend** ist (IDV 13) |
+| viele Zeilen / hohe Dimension (skaliert gut) | du **subtile** multivariate Fehler suchst (→ OC-SVM, AE) |
+| wenige Hyperparameter, gute Defaults erwünscht | Anomalien sehr hochdimensional & dünn besetzt sind |
+| eine **starke Baseline** für Vergleiche nötig ist | du genaue Score-*Kalibrierung* brauchst |
+
+### So liest und erklärst du das Ergebnis
+
+- **Der Score** liegt zwischen 0 und 1: *nahe 1 = Anomalie* (kurze Pfade), *um 0.5 = normal*.
+- **Faustregel zum Erklären:** „Dieser Punkt ließ sich verdächtig leicht vom Rest abtrennen."
+- **Wichtigster Stellhebel:** `max_samples` (wie viele Punkte ein Baum sieht) — ein gutes
+  Beispiel, wo HPO echten Mehrwert bringt.
+- **TEP-Einordnung:** Fängt **klare Step-Fehler (IDV 1, 2, 6, 7)** zuverlässig, hat aber bei
+  den notorisch schweren **3 / 9 / 15** Mühe. Ein mittelmäßiger AUC heißt hier *nicht* „Modell
+  kaputt", sondern „dieser Fehler hat punktweise kaum eine Signatur" — das ist eine Aussage über
+  den *Fehler*, nicht über den Detektor.
+
+---
+
 ## 1. Titel & Einordnung
 
 - **Setting:** unsupervised

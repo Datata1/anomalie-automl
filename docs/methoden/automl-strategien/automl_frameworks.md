@@ -1,5 +1,41 @@
 # AutoML-Strategie 2: Fertige AutoML-Frameworks
 
+> **Intuition zuerst** — dieser Block erklärt die Strategie in Alltagssprache. Die formale
+> Behandlung folgt ab Abschnitt 1.
+
+### In einem Satz
+
+End-to-End-Frameworks lösen die ganze Kette — **Vorverarbeitung, Modellwahl, Tuning,
+Ensembling** — auf Knopfdruck, aber praktisch nur für die **überwachte** Aufgabe.
+
+### Das Bild im Kopf
+
+Ein **Brotbackautomat**: Zutaten (gelabelte Daten) rein, Programm wählen, fertig kommt ein
+gebackenes Modell heraus — die Maschine kümmert sich selbst um Kneten, Gehen und Backen (CASH +
+Meta-Learning + Ensembling). Bequem und stark. Der Haken: Diese Automaten backen nur
+**„überwachtes" Brot** — für **unüberwachte AD** sind sie nicht gebaut. Dafür braucht es Umwege
+(PyCaret als PyOD-Wrapper) oder die anderen Strategien.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| **gelabelte** Fehlerklassifikation gefragt ist | du echtes **label-freies** AutoML-für-AD brauchst (→ Strategie 3/4) |
+| du mit minimalem Code eine starke Baseline willst | du **Erklärtiefe** brauchst (Black-Box) |
+| Meta-Learning & Ensembling „live" gezeigt werden sollen | Installation heikel ist (auto-sklearn unter Py 3.13!) |
+
+### So liest und erklärst du das Ergebnis
+
+- **Wenig Code, starkes Ergebnis** — der bequeme überwachte Vergleichspol zur AD.
+- **Ehrliches TEP-Ergebnis:** **RF ≈ FLAML ≈ AutoGluon** (~0.66–0.68 Macro-F1, ~0.83 AD-AUC) —
+  *das aufwändige Framework schlug den handgetunten Random Forest nicht*. Auch das ist ein
+  berichtenswerter Befund: „mehr Maschinerie ≠ automatisch besser".
+- **Faustregel zum Erklären:** „Aus der Box bekommt man schnell ein solides überwachtes Modell —
+  aber den Sprung gegenüber einer sauberen Baseline muss man sich nicht erkaufen."
+- **Praxis-Hinweis:** Im Projekt ersetzte **FLAML** das schwer installierbare auto-sklearn;
+  AutoGluon lief nur in einem isolierten Python-3.12-Env. Solche Installationsrealitäten ruhig
+  miterzählen — sie gehören zur ehrlichen AutoML-Erfahrung.
+
 ## 1. Idee & Problembezug
 
 Statt einzelne Bausteine (Suchraum, Optimizer, Ensembling) selbst zu verdrahten, lösen

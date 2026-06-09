@@ -1,5 +1,53 @@
 # Autoencoder & LSTM-Autoencoder
 
+> **Intuition zuerst** — dieser Block erklärt die Methode in Alltagssprache und hilft dir,
+> sie anderen zu erklären und Ergebnisse einzuordnen. Die formale Referenz folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Ein Autoencoder lernt, **normalen Anlagenzustand fehlerfrei nachzubauen** — und was er
+*schlecht* nachbauen kann, ist verdächtig.
+
+### Das Bild im Kopf
+
+Stell dir einen **Kunstfälscher vor, der nur echte Geldscheine kennt**. Er hat so viele
+gesehen, dass er jeden echten Schein aus dem Gedächtnis perfekt nachzeichnen kann. Legt man
+ihm eine Fälschung mit ungewohnten Merkmalen vor, gerät seine Kopie daneben — und genau die
+**Größe dieses Kopierfehlers** verrät die Fälschung. Der Autoencoder ist dieser Fälscher: Der
+**Encoder** presst den Input durch einen Flaschenhals (er muss das *Wesentliche* behalten, nicht
+jedes Detail), der **Decoder** baut daraus wieder den vollen Zustand. Trainiert nur auf Gutdaten,
+gelingt das bei Normalbetrieb gut und bei Fehlern schlecht → der **Rekonstruktionsfehler** ist
+der Anomalie-Score. Der **LSTM-AE** denkt nicht in Einzelbildern, sondern in **Melodien**: Er
+fragt nicht „ist dieser Ton normal?", sondern „ist diese *Tonfolge* normal?" — und fängt so
+zeitliche Fehler, die punktweise unsichtbar sind.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| viele Sensoren mit **nichtlinearen** Zusammenhängen | wenig Daten oder keine GPU/Rechenzeit |
+| genug Gutdaten zum Lernen vorhanden | du eine **schnelle, interpretierbare** Baseline brauchst (→ PCA) |
+| **zeitliche/driftende** Fehler wichtig sind (LSTM-AE) | du **label-frei das Modell auswählen** musst (Trainings-Loss täuscht!) |
+| etwas Tuning-Aufwand vertretbar ist | der Threshold robust sitzen muss (heikel) |
+
+### So liest und erklärst du das Ergebnis
+
+- **Der Score** ist der Rekonstruktionsfehler pro Punkt/Fenster — *höher = anomaler*. Die
+  überzeugendste Darstellung ist die **Score-Zeitreihe eines Laufs** mit eingezeichnetem
+  Fehler-Onset und Threshold: Vor dem Onset bleibt der Fehler niedrig, danach springt er klar
+  über die Schwelle.
+- **Faustregel zum Erklären:** „Das Modell konnte diesen Zustand nicht aus dem Gelernten
+  nachbauen." Das ist für ein Publikum sofort einleuchtend.
+- **Häufigste Fehldeutung:** Ein *niedriger Trainings-Loss heißt nicht „guter Detektor"*. Ist
+  der Flaschenhals zu weit, lernt der AE eine Abkürzung und rekonstruiert *auch Anomalien* gut
+  → er erkennt nichts mehr. Deshalb ist der Trainings-Loss **kein** Selektionskriterium (siehe
+  Abschnitt 7).
+- **TEP-Einordnung:** Der LSTM-AE erreichte ~**0.99 ROC-AUC** und fing sogar den langsam
+  driftenden Fehler IDV 13 — das ist die Pointe, dass *zeitliche* Modellierung punktweisen
+  Methoden überlegen ist, wenn die Fehlersignatur in der Dynamik steckt.
+
+---
+
 ## 1. Titel & Einordnung
 
 - **Setting:** unsupervised (Deep Learning)

@@ -1,5 +1,49 @@
 # Deep SVDD & DeepSAD
 
+> **Intuition zuerst** — dieser Block erklärt die Methode in Alltagssprache und hilft dir,
+> sie anderen zu erklären und Ergebnisse einzuordnen. Die formale Referenz folgt ab Abschnitt 1.
+
+### In einem Satz
+
+Ein neuronales Netz lernt, **alle Gutdaten in einen engen Ball um ein Zentrum zu pressen** — je
+weiter ein Punkt vom Zentrum landet, desto anomaler; **DeepSAD** darf zusätzlich wenige bekannte
+Fehler aktiv *nach außen drücken*.
+
+### Das Bild im Kopf
+
+**Deep SVDD:** Du bringst einem Hütehund bei, **alle normalen Schafe in einen möglichst kleinen
+Pferch zu treiben**. Ein Schaf, das partout nicht in die Nähe der Mitte will, ist verdächtig —
+der Abstand zur Pferchmitte ist der Anomalie-Score. Anders als die OC-SVM ist die „Hülle" hier
+nicht fest vorgegeben, sondern das Netz **lernt die Repräsentation selbst** mit, in der sich die
+Gutdaten am besten zusammenballen.
+
+**DeepSAD** geht einen Schritt weiter: Du zeigst dem Hund **eine Handvoll markierter „Wölfe"
+(gelabelte Fehler) und sagst „die gehören *weit weg* vom Pferch"**. Schon wenige Beispiele
+schärfen den Zaun dramatisch — das ist der Sprung vom unüberwachten ins **semi-supervised**
+Setting.
+
+### Wann sinnvoll – und wann nicht
+
+| Stark, wenn … | Heikel/schwach, wenn … |
+|---|---|
+| **subtile** Fehler entscheidend sind (stärkster Detektor) | Implementierungs-/Tuning-Budget knapp ist |
+| ein **kleines Label-Budget** existiert (→ DeepSAD) | keine GPU verfügbar |
+| du das **semi-supervised** Setting demonstrieren willst | du eine schnelle interpretierbare Lösung brauchst |
+
+### So liest und erklärst du das Ergebnis
+
+- **Der Score** ist der Abstand zum Zentrum `‖φ(x) − c‖²` — *höher = anomaler*.
+- **Die Pointe der TEP-Ergebnisse:** **DeepSAD 0.985 vs. Deep SVDD 0.834** — *ein winziges
+  Label-Budget kaufte einen riesigen Sprung*. Das ist die zentrale semi-supervised-Aussage des
+  Projekts: schon wenige Labels schärfen sowohl die Detektion als auch die Modellselektion.
+- **Faustregel zum Erklären:** „Das Netz hat gelernt, wie ‚nah am Normalzustand' aussieht — und
+  bei DeepSAD zusätzlich, wie weit bekannte Fehler davon entfernt liegen."
+- **Achte auf den Kollaps:** Wenn das Netz *alles* (auch Anomalien) ins Zentrum legt (φ ≡ c),
+  ist das Modell degeneriert und erkennt nichts — ein bekannter Fallstrick bei falscher
+  Regularisierung. Score, der für alle Punkte ~0 ist, ist das Warnsignal.
+
+---
+
 ## 1. Titel & Einordnung
 
 - **Setting:** Deep SVDD = unsupervised; **DeepSAD = semi-supervised** (Gutdaten + wenige

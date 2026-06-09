@@ -4,6 +4,44 @@
 > warum „AutoML für Anomaliedetection" nicht einfach „AutoML auf ein AD-Modell anwenden"
 > ist.
 
+> **Intuition zuerst** — dieser Block erklärt das Kernproblem in Alltagssprache. Die formale
+> Behandlung folgt ab Abschnitt 1.
+
+### In einem Satz
+
+AutoML wählt sonst das beste Modell, indem es Kandidaten **gegen einen Lösungsschlüssel
+(Labels)** benotet — in der unüberwachten AD gibt es zur Auswahlzeit **keinen Schlüssel**, und
+genau das macht das Problem schwer.
+
+### Das Bild im Kopf
+
+Stell dir vor, du sollst aus **zehn Klausuren die beste auswählen — ohne Musterlösung**. Genau
+darin steckt AD: Du hast zehn Detektoren, aber keine gelabelten Anomalien, an denen du „richtig"
+von „falsch" ablesen könntest. Drei Auswege:
+
+1. **Interne Indizien** — wähle die Klausur, die in sich am saubersten/selbstsichersten wirkt
+   (interne Metriken wie EM/MV, SIREOS). *Vorsicht:* „sieht ordentlich aus" korreliert oft nur
+   **schwach** mit „ist richtig".
+2. **Erfahrung aus früheren Klausuren mit Musterlösung** — du erinnerst dich, welche Art Schüler
+   bei ähnlichen Aufgaben gut war (Meta-Learning / MetaOD).
+3. **Gar nicht auswählen** — lass *alle zehn* abstimmen und nimm den Konsens (Ensemble). Oft
+   überraschend stark, weil es das Auswahlproblem **umgeht**.
+
+Und der **TEP-Trick:** Wir *haben* hier heimlich doch die Musterlösung (`faultNumber`). Wir
+benutzen sie **nicht zum Auswählen**, sondern nur, um zu *messen*, wie weit die schlüssel-freien
+Methoden vom Optimum entfernt sind — das ist das **Oracle**.
+
+### So liest und erklärst du das Ergebnis
+
+- **Die Kernzahl ist der „Gap zum Oracle":** Wie viel ROC-AUC kostet der Verzicht auf Labels?
+- **Das überraschende TEP-Ergebnis:** Die label-freie **Konsens-Selektion (~0.854)** kam dem
+  **Oracle (~0.855)** praktisch gleich. Heißt: *Auf TEP hat „Schummeln mit Labels" bei der
+  Auswahl kaum geholfen* — ein starkes, beruhigendes Resultat für die Praxis.
+- **Faustregel zum Erklären:** „Wir konnten den besten Detektor fast genauso gut *ohne* Labels
+  finden wie *mit* — und das ist die eigentliche Frage von AutoML-für-AD."
+- **Ehrlich bleiben:** Interne Metriken sind ein **Werkzeug, keine Garantie** (Ma et al. 2023) —
+  immer kritisch berichten, nicht als Wahrheit verkaufen.
+
 ## 1. Warum klassisches AutoML hier nicht direkt greift
 
 Klassisches AutoML (HPO, CASH) ist ein Optimierungsproblem:
