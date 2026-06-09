@@ -23,7 +23,7 @@ class _DeepSVDD:
     def __init__(self, **hp):
         self.hp = hp
 
-    def fit(self, X: np.ndarray, y=None) -> "_DeepSVDD":
+    def fit(self, X: np.ndarray, y=None) -> _DeepSVDD:
         from pyod.models.deep_svdd import DeepSVDD
 
         params = {
@@ -65,7 +65,7 @@ try:  # pragma: no cover - abhängig von optionaler Installation
             self.hp.update(hp)
             self.contamination = self.hp.pop("contamination", config.DEFAULT_CONTAMINATION)
 
-        def fit(self, X: np.ndarray, y=None) -> "_DeepSAD":
+        def fit(self, X: np.ndarray, y=None) -> _DeepSAD:
             self.model_ = _DeepSADImpl(**self.hp)
             self.model_.fit(X, y)
             self.decision_scores_ = self.model_.decision_function(X)
@@ -78,7 +78,7 @@ try:  # pragma: no cover - abhängig von optionaler Installation
         def predict(self, X: np.ndarray) -> np.ndarray:
             return (self.decision_function(X) > self.threshold_).astype(int)
 
-    def make_deep_sad(**hp) -> "_DeepSAD":
+    def make_deep_sad(**hp) -> _DeepSAD:
         return _DeepSAD(**hp)
 
     FACTORIES["deep_sad"] = make_deep_sad

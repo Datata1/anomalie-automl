@@ -89,7 +89,7 @@ def comparison_bars(
     ax.set(ylabel=metric, title=f"Vergleich: {metric}")
     ax.set_ylim(0, 1 if metric in {"roc_auc", "pr_auc", "f1"} else None)
     ax.tick_params(axis="x", rotation=30)
-    for b, v in zip(bars, values):
+    for b, v in zip(bars, values, strict=True):
         ax.text(b.get_x() + b.get_width() / 2, v, f"{v:.3f}", ha="center", va="bottom", fontsize=8)
     return _save(fig, save_as)
 
@@ -111,7 +111,7 @@ def grouped_bars(
         vals = [results_by_group[g].get(s, float("nan")) for g in groups]
         xs = [j + i * width for j in range(len(groups))]
         bars = ax.bar(xs, vals, width=width, label=s)
-        for b, v in zip(bars, vals):
+        for b, v in zip(bars, vals, strict=True):
             ax.text(b.get_x() + b.get_width() / 2, v, f"{v:.2f}", ha="center", va="bottom", fontsize=7)
     ax.set_xticks([j + width * (n_series - 1) / 2 for j in range(len(groups))])
     ax.set_xticklabels(groups)
@@ -137,4 +137,32 @@ def hpo_trial_distribution(values: list[float], ylabel: str = "Val-ROC-AUC", sav
     ax2.plot(range(1, len(vals) + 1), running_best, marker=".", color="tab:blue")
     ax2.set(xlabel="Trial", ylabel=f"bester {ylabel}", title="Optimierungsverlauf")
     fig.tight_layout()
+    return _save(fig, save_as)
+
+
+def method_fault_heatmap(
+    per_method_recall: dict[str, dict[int, float]],
+    save_as: str | None = None,
+):
+    """Heatmap Recall je (Detektor × Fehlertyp). Zeilen = Methoden, Spalten = Fehler (IDV).
+
+    ``per_method_recall``: ``{methode: {fault: recall}}`` (Recall der Post-Onset-Anomalien).
+    """
+    methods = list(per_method_recall)
+    faults = sorted({f for rec in per_method_recall.values() for f in rec})
+    matrix = np.array([[per_method_recall[m].get(f, float("nan")) for f in faults] for m in methods])
+
+    fig, ax = plt.subplots(figsize=(max(6, 0.7 * len(faults)), 0.6 * len(methods) + 1.5))
+    im = ax.imshow(matrix, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
+    ax.set_xticks(range(len(faults)))
+    ax.set_xticklabels(faults)
+    ax.set_yticks(range(len(methods)))
+    ax.set_yticklabels(methods)
+    ax.set(xlabel="Fehlertyp (IDV)", title="Recall je Detektor × Fehlertyp")
+    for i in range(len(methods)):
+        for j in range(len(faults)):
+            v = matrix[i, j]
+            if v == v:  # NaN-Check
+                ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=7)
+    fig.colorbar(im, ax=ax, fraction=0.046)
     return _save(fig, save_as)

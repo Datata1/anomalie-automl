@@ -28,7 +28,11 @@ Detektoren aus Stream A automatisch ein), erzeugt `reports/results.csv`
 
 ## Umsetzungshinweise
 - Reuse `eval.summarize`, `eval.plots.comparison_bars/grouped_bars`. Detektoren über die
-  Registry holen (nicht hartkodieren) → Stream-A-Detektoren erscheinen automatisch.
+  Registry holen (nicht hartkodieren) → Stream-A-Detektoren erscheinen automatisch. **Aber**
+  heterogene Detektoren filtern: `lstm_ae` (3D-Sequenzen) und `deep_sad` (Label-Budget) nicht
+  mit dem 2D-`fit(X)`-Standardpfad mischen — entweder ausschließen oder separat mit
+  `data.load_windowed` / `data.load_semisupervised` behandeln. Tabellarisch-unüberwacht:
+  `ecod, iforest, ocsvm, pca, autoencoder, som, deep_svdd`.
 - Laufzeit deckeln: moderate Subsamples; teure Detektoren (OCSVM/AE) optional via Flag.
 - CSV mit `csv`/`pandas` schreiben; keine neue Schwergewichts-Dependency.
 

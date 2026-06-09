@@ -24,8 +24,10 @@ Eine Übersicht „welche Methode fängt welchen Fehler": Recall je (Detektor ×
 - `method_fault_heatmap(per_method_recall, save_as=None) -> matplotlib.figure.Figure`.
 - Recall je Fehler: Anteil Punkte mit `score > threshold_` unter den anomalen Punkten
   (`faultNumber==f & sample>160`).
-- Detektoren über `automl_ad.detectors.available_detectors()` (Stream-A-Detektoren automatisch
-  inklusive).
+- Detektoren über `automl_ad.detectors.available_detectors()`, **aber** heterogene Detektoren
+  filtern: `lstm_ae` (3D-Sequenzen) und `deep_sad` (Label-Budget) nicht im 2D-`fit(X)`-Pfad
+  mischen. Für die Methode×Fehler-Heatmap die tabellarisch-unüberwachten nehmen:
+  `ecod, iforest, ocsvm, pca, autoencoder, som, deep_svdd`.
 
 ## Umsetzungshinweise
 - Reuse die Recall-Logik aus `per_fault_recall_heatmap` (gruppieren nach `faultNumber`).

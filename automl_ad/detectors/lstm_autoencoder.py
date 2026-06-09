@@ -79,7 +79,7 @@ class LSTMAEDetector:
                 errors.append(err.cpu().numpy())
         return np.concatenate(errors) if errors else np.empty(0)
 
-    def fit(self, X: np.ndarray, y=None) -> "LSTMAEDetector":
+    def fit(self, X: np.ndarray, y=None) -> LSTMAEDetector:
         self._check_3d(X)
         torch.manual_seed(self.random_state)
         np.random.seed(self.random_state)

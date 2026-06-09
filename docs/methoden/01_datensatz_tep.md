@@ -97,20 +97,11 @@ detektierbar (geringe Signatur) — gut geeignet, um Methodenunterschiede zu zei
 ## 6. Daten-Beschaffung & Konvertierung (Reproduzierbarkeit)
 
 1. Download der vier `.RData`-Dateien (Kaggle/Harvard Dataverse) nach `data/`.
-2. `export_rdata.R` erweitern, sodass **alle vier** Tabellen exportiert werden:
-   ```r
-   library(arrow)
-   load("data/TEP_FaultFree_Training.RData")  # -> fault_free_training
-   load("data/TEP_FaultFree_Testing.RData")   # -> fault_free_testing
-   load("data/TEP_Faulty_Training.RData")     # -> faulty_training
-   load("data/TEP_Faulty_Testing.RData")      # -> faulty_testing
-   write_parquet(fault_free_training, "data/TEP_FaultFree_Training.parquet")
-   write_parquet(fault_free_testing,  "data/TEP_FaultFree_Testing.parquet")
-   write_parquet(faulty_training,     "data/TEP_Faulty_Training.parquet")
-   write_parquet(faulty_testing,      "data/TEP_Faulty_Testing.parquet")
-   ```
-3. Parquet ist git-ignored (`.gitignore`), bleibt also lokal. Optional ein
-   Download-/Konvertierungsskript für Reproduzierbarkeit dokumentieren.
+2. Konvertierung nach Parquet: `Rscript export_rdata.R` (exportiert **alle vier** Tabellen;
+   das Skript liegt im Repo-Root).
+3. Validierung von Vorhandensein + Schema (55 Spalten):
+   `uv run python scripts/fetch_convert_data.py --check`.
+4. Parquet ist git-ignored (`.gitignore`), bleibt also lokal.
 
 ## 7. Praktische Hinweise für die Modellierung
 

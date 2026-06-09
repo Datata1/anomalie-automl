@@ -36,7 +36,7 @@ class _SOMDetector:
         self.contamination = contamination
         self.random_state = random_state
 
-    def fit(self, X: np.ndarray, y=None) -> "_SOMDetector":
+    def fit(self, X: np.ndarray, y=None) -> _SOMDetector:
         from minisom import MiniSom
 
         self.som_ = MiniSom(

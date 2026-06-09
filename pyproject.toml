@@ -28,3 +28,29 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["automl_ad"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "python-pptx>=1.0.2",
+    "ruff>=0.15.16",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "data: benötigt lokale TEP-Parquet-Dateien unter data/ (sonst übersprungen)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# marimo-Notebooks sind reaktive .py-Dateien mit eigener Struktur → nicht linten.
+exclude = ["notebooks", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]  # Zeilenlänge stilistisch, nicht blockierend
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]  # bewusste Re-Exports

@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: uv installieren
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: Abhängigkeiten synchronisieren
+        run: uv sync
+
+      - name: Lint (ruff)
+        run: uv run ruff check .
+
+      - name: Smoke-Import
+        run: uv run python -c "import automl_ad; from automl_ad.detectors import available_detectors; print(available_detectors())"
+
+      - name: Tests (ohne große Daten)
+        run: uv run pytest -m "not data" -q

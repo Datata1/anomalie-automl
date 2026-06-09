@@ -12,15 +12,15 @@ die Konventionen unten und das jeweilige Ticket vollständig lesen.
 | [T02](TICKET-02-lstm-autoencoder.md) | LSTM-Autoencoder (zeitlich) | A | L | T01 | **erledigt** |
 | [T03](TICKET-03-deepsad-semisupervised.md) | DeepSAD / Deep SVDD (semi-sup.) | A | L | T01 | **erledigt** |
 | [T04](TICKET-04-som-detector.md) | SOM-Detektor | A | M | T01 | **erledigt** |
-| [T05](TICKET-05-multifidelity-hpo.md) | Multi-Fidelity-HPO (Hyperband/BOHB) | B | M | – | offen |
-| [T06](TICKET-06-internal-metrics.md) | Interne Validierungsmetriken | B | M | – | offen |
-| [T07](TICKET-07-ensemble-selection.md) | Ensemble Selection (greedy) + LSCP | B | M | – | offen |
-| [T08](TICKET-08-ruff-ci.md) | Lint (ruff) + CI | C | S | – | offen |
-| [T09](TICKET-09-pytest-suite.md) | pytest-Testsuite | C | M | – | offen |
-| [T10](TICKET-10-data-fetch-script.md) | Daten-Fetch/Convert-Skript | C | S | – | offen |
-| [T11](TICKET-11-asset-generator.md) | Asset-/Ergebnis-Generator | D | M | weich A/B | offen |
-| [T12](TICKET-12-eda-marimo-port.md) | EDA → marimo-Port | D | S | – | offen |
-| [T13](TICKET-13-per-fault-deepdive.md) | Per-Fault-Deep-Dive | D | M | weich A | offen |
+| [T05](TICKET-05-multifidelity-hpo.md) | Multi-Fidelity-HPO (Hyperband/BOHB) | B | M | – | **erledigt** |
+| [T06](TICKET-06-internal-metrics.md) | Interne Validierungsmetriken | B | M | – | **erledigt** |
+| [T07](TICKET-07-ensemble-selection.md) | Ensemble Selection (greedy) + LSCP | B | M | – | **erledigt** |
+| [T08](TICKET-08-ruff-ci.md) | Lint (ruff) + CI | C | S | – | **erledigt** |
+| [T09](TICKET-09-pytest-suite.md) | pytest-Testsuite | C | M | – | **erledigt** |
+| [T10](TICKET-10-data-fetch-script.md) | Daten-Fetch/Convert-Skript | C | S | – | **erledigt** |
+| [T11](TICKET-11-asset-generator.md) | Asset-/Ergebnis-Generator | D | M | weich A/B | **erledigt** |
+| [T12](TICKET-12-eda-marimo-port.md) | EDA → marimo-Port | D | S | – | **erledigt** |
+| [T13](TICKET-13-per-fault-deepdive.md) | Per-Fault-Deep-Dive | D | M | weich A | **erledigt** |
 
 ## Abhängigkeitsgraph
 

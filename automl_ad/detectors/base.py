@@ -15,7 +15,8 @@ from __future__ import annotations
 import importlib
 import os
 import pkgutil
-from typing import Callable, Protocol, runtime_checkable
+from collections.abc import Callable
+from typing import Protocol, runtime_checkable
 
 import numpy as np
 
@@ -27,7 +28,7 @@ class AnomalyDetector(Protocol):
     decision_scores_: np.ndarray
     threshold_: float
 
-    def fit(self, X: np.ndarray) -> "AnomalyDetector": ...
+    def fit(self, X: np.ndarray) -> AnomalyDetector: ...
     def decision_function(self, X: np.ndarray) -> np.ndarray: ...  # höher = anomaler
 
 
